@@ -267,9 +267,7 @@ end
 
 * Create a method, named songs, that will return an array of hashes. Each hash will represent one song.  
 * Each song will have a title, duration, price and artist name.
-
-
-## Demo: Ajax 
+ 
 ### Setup Rails to allow Cross Browser HTTP Requests**
 
 *This is magic, for now. Trust me, it'll make sense later.*
