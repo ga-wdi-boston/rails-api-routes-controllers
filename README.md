@@ -195,8 +195,6 @@ As you learned in the previous lesson, a route indicates which controller action
   ```
 
   We are creating a Rails route that will say to Rails "When you receive a GET request at the URL path '/movies', invoke the `index` method on the class MoviesController."
-  
-  To actually add this configuration to the server, we need to run `rake routes`.
 
   Of course, our route alone is nothing without a controller action behind it; if we try to access *http://localhost:3000/movies*, we'll get another error:
 
