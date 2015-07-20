@@ -165,8 +165,8 @@ Let's try to access the default Rails URL. In your browser, go to *http://localh
 
 Uh oh! We hit an error.
 ```
->> ActiveRecord::NoDatabaseError  
->> FATAL: database "movies_app_development" does not exist  
+>> ActiveRecord::NoDatabaseError
+>> FATAL: database "movies_app_development" does not exist
 ```
 
 Looks like we need to set up a database if we want to move forward.
@@ -216,7 +216,7 @@ As you learned in the previous lesson, a route indicates which controller action
 
   This will create a new controller based on the default controller for our application, `ApplicationController`. In addition, this new controller now has a method called `index`, which should get triggered by the server in response to a GET request appearing at `/movies`. The only thing missing is the data - instead of giving us data on each movie, the `index` method (for now) only returns the text "All my movies".
 
-3. **Access data.**  
+3. **Access data.**
   In an actual Rails app, retrieving and manipulating data would be done through the model. However, for today, we'll simplify things by mocking up the model.
 
   Edit your MoviesController to have the following code:
@@ -260,10 +260,11 @@ touch songs.js
 
 However, we soon run into an unexpected problem - our app isn't working, and we get a mysterious error in the console:
 
-```
+```javascript
+XMLHttpRequest cannot load http://... . No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'null' is therefore not allowed access.
 ```
 
-What does it mean? And what's this CORS stuff anyway?
+What does it mean? And what's this Access-Control-Allow-Origin stuff anyway?
 
 You may not have realized this, but for security reasons, servers are (by default) only permitted to access their own files; if you have an app being hosted on `localhost:5000`, it only has the ability to see other files being hosted by the same server. So how do we allow our front-end app, hosted on one server (`localhost:5000`) to make AJAX requests to our Rails app, which is on another server (`localhost:3000`)?
 
