@@ -6,16 +6,20 @@
 
 By the end of this lesson, students should be able to:
 
-* Use AJAX to get a list of movies a simple HTTP Server.
-* Use Ajax to get a list of movies from a **pre-existing** simple Rails application.
-* Create a new Rails application that will provide this list of movies.
-* Access a list of movies and songs from this Rails API using HTTP clients, Browser and curl.
-* Access a specific movie and a specific song.
+* Use AJAX to get a list of items through a simple HTTP Server.
+* Use Ajax to get a list of items from a **pre-existing** Rails application.
+* Create a new Rails application that will provide this list of items, or a single item from the list.
+* Retrieve a list of items (via AJAX) from the new Rails API and render them in the browser (i.e. implement `index`).  
+* Retrieve a specific item (via AJAX) from the new Rails API and render them in the browser (i.e. implement `show`). 
 
 ## Prerequisites
 
 - Ruby
+- MVC
 - HTTP
+- JavaScript
+- jQuery
+- AJAX
 
 ## Routing and Control :: Front-End
 
