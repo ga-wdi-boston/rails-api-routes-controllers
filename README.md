@@ -181,11 +181,19 @@ Once you've cloned the repo, set up the database, and started the server, open y
 Now that we've got a running back-end, let's update our the URL of our AJAX request; setting `movies_url` to `http://localhost:3000/movies` should allow our front-end app to find the back-end. We also should not need to explicitly parse the response that we get from the server, so let's update the `.done` handler accordingly.
 
 ```javascript
-	 .done(function(movies){
-        movies.forEach(function(movie){
-          $moviesList.append("<li>" + movie.name + "</li>");
-        });
-      })
+	...
+	
+	var moviesResponseHandler  = function(moviesData){
+      console.log('moviesData is ' + moviesData);
+
+      // Server informs the browser that the returned data is 
+      // JSON. The HTTP Response header Content-Type is set to 
+      // application/json. So JQuery will automatically convert
+      // the data to an Array of Movie objects.
+      var movies = moviesData;
+      console.log('movies are ' + movies);
+      
+	...
 ```
 
 Does the app work as expected? Fantastic!
@@ -270,7 +278,8 @@ As you learned in the previous lesson, a route indicates which controller action
   In an actual Rails app, retrieving and manipulating data would be done through the model. However, for today, we'll simplify things by mocking up the model.
 
   Edit your MoviesController to have the following code:
-  ```ruby
+
+```ruby
   class MoviesController < ApplicationController
     def index         # GET /movies
       render :json => movies.to_json
@@ -285,28 +294,11 @@ As you learned in the previous lesson, a route indicates which controller action
       ]
     end
   end
-  ```
+```
 
   This will cause MoviesController to return a JSON full of movie data, rather than just the text "All my movies".
 
-### Your Turn - Create a Rails App for Songs
-
-In pairs, create a new Rails app called `songs_app`, with a route at *http://localhost:3000/songs*, just like we did with `movies_app`. To do this, you will need to create a `SongsController` object with an `index` method.
-
-Start by having your app render the text "All my songs" in response to a GET request at `/songs`; once that's working, create a (TEMPORARY) private method called `songs` which returns an array of hashes (one to represent each song). Each song will need to have a title, a duration, a price, and the name of the artist. Feel free to pick whatever songs you like.
-
-Once you have the app working, draw out a diagram on your desks of the flow the application, starting with the HTTP request and ending with the view.
- 
-## Routing and Control :: Adding Back the Front ending
-
-Now that we have a working back-end, let's create a new front-end for `songs_app`, based on the one that was created for `movies_app`. We should be able to copy the previous front-end, so long as we are sure to update the links.
-
-```bash
-mkdir songs_frontend
-cd songs_frontend
-touch index.html
-touch songs.js
-```
+#### Handle Cross Browser HTTP Requests.
 
 However, we soon run into an unexpected problem - our app isn't working, and we get a mysterious error in the console:
 
@@ -327,8 +319,9 @@ gem 'rack-cors', :require => 'rack/cors'
 ```
 
 Then, edit a file in the `config` directory, `application.rb` to contain the following:
-```
-module SongsApp
+
+```ruby
+module MoviesApp
   class Application < Rails::Application
 
     ...
@@ -338,7 +331,7 @@ module SongsApp
         origins '*'
         resource '*', headers: :any, methods: [:get, :post, :patch, :put, :delete, :options]
       end
-    end
+    end # end of CORS configuration
   end
 end
 ```
@@ -346,6 +339,26 @@ end
 Finally, restart the Rails server by running `rails s`.
 
 Your back-end's CORS policy should now be set up! Try running the AJAX request in your front end and see what happens.
+
+
+### Your Turn - Create a Rails App for Songs
+
+In pairs, create a new Rails app called `songs_app`, with a route at *http://localhost:3000/songs*, just like we did with `movies_app`. To do this, you will need to create a `SongsController` object with an `index` method.
+
+Start by having your app render the text "All my songs" in response to a GET request at `/songs`; once that's working, create a (TEMPORARY) private method called `songs` which returns an array of hashes (one to represent each song). Each song will need to have a title, a duration, a price, and the name of the artist. Feel free to pick whatever songs you like.
+
+Once you have the app working, draw out a diagram on your desks of the flow the application, starting with the HTTP request and ending with the view.
+ 
+## Routing and Control :: Adding Back the Front ending
+
+Now that we have a working back-end, let's create a new front-end for `songs_app`, based on the one that was created for `movies_app`. We should be able to copy the previous front-end, so long as we are sure to update the links.
+
+```bash
+mkdir songs_frontend
+cd songs_frontend
+touch index.html
+touch songs.js
+```
 
 ## Additional Resources
 
