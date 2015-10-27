@@ -67,33 +67,79 @@ Next, let's add some content to these files.
   ```
 
 ##### movies.js
-  ```javascript
-  $(document).ready(function(){
-    var $moviesList = $('#movies');
+```javascript
+'use strict';
 
-    // Get the movies from the movies.json file served from
-    // the web server listening on port 5000.
-    var movies_url = 'http://localhost:5000/movies.json';
+// Invoke the anonymous function passed to ready
+// after the DOM has fully loaded.
+$(document).ready(function(){
 
-    $('#movies_button').on('click', function(event){
-      $.ajax({
-        url: movies_url,
-        dataType: 'json'
-      })
-        .done(function(movies_json){
-          var movies = JSON.parse(movies_json);
-          movies.forEach(function(movie){
-            $moviesList.append("<li>" + movie.name + "</li>");
-          });
-        })
-        .fail(function(data){
-          var errorMsg = 'Error: Accessing the URL' + movies_url;
-          alert(errorMsg);
-          console.log(errorMsg);
-        });
-    })
-  });
-  ```
+  // get the DOM element with id 'movies'. This is 
+  // the unordered list, '<ul>', of movies
+  var $movieList = $('#movies');
+
+  // The URL of a JSON file that contains a list of movies
+  var moviesURL = 'http://localhost:5000/movies.json';
+
+  // When the user clicks the button with an id of 'movies_button'
+  // the browser will invoke the anonymous function passed to the 
+  // 'on' method.
+  $('#movies_button').on('click', function(event){
+
+    // Disable default browser behavior, (prob not needed here).
+    event.preventDefault();
+
+    // Make a AJAX request to get the above JSON file.
+    // $.ajax returns a "Promise". A Promise will have a number
+    // of methods. Two of these methods are 'done' and 'fail'.
+    var requestPromise = $.ajax({
+      method: 'GET',
+      url: moviesURL,
+      dataType: 'json'
+    }); // end of $.ajax 
+
+    // Define a function that will be invoked when the Promise
+    // done method is called.
+    // A function that is passed to another function is often 
+    // referred to as a 'callback' or 'handler'.
+    var moviesResponseHandler  = function(moviesData){
+      console.log('moviesData is ' + moviesData);
+
+      // JSON.parse will take a string, formatted as JSON,
+      // and convert it to a JS Array of movies objects.
+      var  movies = JSON.parse(moviesData);
+      console.log('movies are ' + movies);
+
+      // For each movie in the movies array:
+      // - create a list element, '<li>',
+      // - add the movie name to the list element.
+      // - append the list element the unordered
+      // list of movies, <ul id='movies'>.
+      movies.forEach(function(movie){
+        $movieList.append('<li>' + movie.name + '</li>');
+      });
+    }; // end of moviesResponseHandler
+
+    // The Promise object, returned from $.ajax,
+    // done method will be invoked when the server's HTTP
+    // Reply is recieved by the browser. This method is invoked
+    // when the HTTP Reply indicates success, 200 OK response.
+    // The done method will then invoke the moviesResponseHandler
+    // function to process this server reply.
+    requestPromise.done(moviesResponseHandler);
+
+    // The Promise object, returned from $.ajax, fail method
+    // will be invoked if the server's HTTP Reply indicates
+    // an error. For example, a HTTP status of 404.
+    requestPromise.fail(function(){
+      console.error('Error: Ajax request for ' + moviesURL);
+    }); // end of requestPromise.fails
+
+  }); // end of $('#movies_button').on click handler
+
+}); // end of $(document).ready handler
+
+```
 
 ##### movies.json
 
