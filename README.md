@@ -29,7 +29,13 @@ Now that you've mocked up how an MVC app works, and explored the file structure 
 
 As you saw in the prior demonstration, the flow of our Rails app usually begins with a request from a client, usually a browser. You've started building front-end apps that use AJAX before, but in case you don't remember how to do it, we'll set one up together.
 
-> Feeling fuzzy on HTTP? Check out this [video](https://www.youtube.com/watch?v=kGOpY2J31pI) on HTTP GET and POST, or review the lessons from week 3 on [HTTP](https://github.com/ga-wdi-boston/http-intro-08) and [AJAX](https://github.com/ga-wdi-boston/ajax-get-08).
+> Feeling fuzzy on HTTP?
+> Check out this [video](https://www.youtube.com/watch?v=kGOpY2J31pI)
+> on HTTP GET and POST, or review the material from Unit 1 on
+> [HTTP](https://github.com/ga-wdi-boston/http-study),
+> and AJAX [GET](https://github.com/ga-wdi-boston/jquery-ajax-get-delete),
+> [POST](https://github.com/ga-wdi-boston/jquery-ajax-post),
+> and [PATCH](https://github.com/ga-wdi-boston/jquery-ajax-patch).
 
 First, let's create a directory to hold our new front-end app, which we'll call `movies_frontend`, and create an HTML file and a JS file inside it.
 
