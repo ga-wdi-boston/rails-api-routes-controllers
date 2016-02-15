@@ -6,18 +6,13 @@
 
 By the end of this lesson, students should be able to:
 
-*   Use AJAX to get a list of items through a simple HTTP Server.
-
-*   Use AJAX to get a list of items from a **pre-existing** Rails application.
-
-*   Create a new Rails application that will provide this list of items,
-or a single item from the list.
-
-*   Retrieve a list of items (via AJAX) from the new Rails API
-and render them in the browser (i.e. implement `index`).
-
-*   Retrieve a specific item (via AJAX) from the new Rails API
-and render them in the browser (i.e. implement `show`).
+*   Explain the roles of a router and a controller within a Rails application
+*   Create a table mapping methods and paths to standard CRUD actions
+*   Write basic routes for all standard CRUD actions
+*   Generate standard CRUD routes using "resource routing"
+*   Limit which routes "resource routing" generates, using `only:` and `except:`
+*   Generate a controller to handle some category of requests
+*   Create actions on a controller to handle specific requests
 
 ## Prerequisites
 
