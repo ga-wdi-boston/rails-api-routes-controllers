@@ -23,7 +23,7 @@ By the end of this lesson, students should be able to:
 *   jQuery
 *   AJAX
 
-## Routing and Control :: Front-End
+## Rails APIs from the Outside
 
 Now that you've mocked up how an MVC app works,
 and explored the file structure of a Rails application,
@@ -35,8 +35,6 @@ actually implemented in a Rails.
 As you saw in the prior demonstration,
 the flow of our Rails app usually begins with a request from a client,
 usually a browser.
-You've started building front-end apps that use AJAX before,
-but in case you don't remember how to do it, we'll set one up together.
 
 > Feeling fuzzy on HTTP?
 > Check out this [video](https://www.youtube.com/watch?v=kGOpY2J31pI)
@@ -46,210 +44,69 @@ but in case you don't remember how to do it, we'll set one up together.
 > [POST](https://github.com/ga-wdi-boston/jquery-ajax-post),
 > and [PATCH](https://github.com/ga-wdi-boston/jquery-ajax-patch).
 
-First, let's create a directory to hold our new front-end app,
-which we'll call `movies_frontend`,
-and create an HTML file and a JS file inside it.
+### Code-Along : Working with an Existing API
 
-```bash
-mkdir movies_frontend
-cd movies_frontend
-touch index.html
-touch movies.js
-```
-
-Let's also create a file called `movies.json`.
-We'll start off by using this file to mock up
-the results we might get from a back-end.
-
-```bash
-touch movies.json
-```
-
-Next, let's add some content to these files.
-
-**index.html**
-
-```html
-<html>
-<head>
-  <title>Movies</title>
-</head>
-<body>
-  <h1>Movies</h1>
-  <ul id='movies'>
-  </ul>
-  <button id='movies_button'>Get Movies</button>
-
-  <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-  <script type="text/javascript" src='movies.js'></script>
-</body>
-</html>
-```
-
-**movies.js**
-
-```javascript
-'use strict';
-
-// Invoke the anonymous function passed to ready
-// after the DOM has fully loaded.
-$(document).ready(function(){
-
-  // get the DOM element with id 'movies'. This is
-  // the unordered list, '<ul>', of movies
-  var $movieList = $('#movies');
-
-  // The URL of a JSON file that contains a list of movies
-  var moviesURL = 'http://localhost:5000/movies.json';
-
-  // When the user clicks the button with an id of 'movies_button'
-  // the browser will invoke the anonymous function passed to the
-  // 'on' method.
-  $('#movies_button').on('click', function(event){
-
-    // Disable default browser behavior, (prob not needed here).
-    event.preventDefault();
-
-    // Make a AJAX request to get the above JSON file.
-    // $.ajax returns a "Promise". A Promise will have a number
-    // of methods. Two of these methods are 'done' and 'fail'.
-    var requestPromise = $.ajax({
-      method: 'GET',
-      url: moviesURL,
-      dataType: 'json'
-    }); // end of $.ajax
-
-    // Define a function that will be invoked when the Promise
-    // done method is called.
-    // A function that is passed to another function is often
-    // referred to as a 'callback' or 'handler'.
-    var moviesResponseHandler  = function(moviesData){
-      console.log('moviesData is ' + moviesData);
-
-      // JSON.parse will take a string, formatted as JSON,
-      // and convert it to a JS Array of movies objects.
-      var  movies = JSON.parse(moviesData);
-      console.log('movies are ' + movies);
-
-      // For each movie in the movies array:
-      // - create a list element, '<li>',
-      // - add the movie name to the list element.
-      // - append the list element the unordered
-      // list of movies, <ul id='movies'>.
-      movies.forEach(function(movie){
-        $movieList.append('<li>' + movie.name + '</li>');
-      });
-    }; // end of moviesResponseHandler
-
-    // The Promise object, returned from $.ajax,
-    // done method will be invoked when the server's HTTP
-    // Reply is recieved by the browser. This method is invoked
-    // when the HTTP Reply indicates success, 200 OK response.
-    // The done method will then invoke the moviesResponseHandler
-    // function to process this server reply.
-    requestPromise.done(moviesResponseHandler);
-
-    // The Promise object, returned from $.ajax, fail method
-    // will be invoked if the server's HTTP Reply indicates
-    // an error. For example, a HTTP status of 404.
-    requestPromise.fail(function(){
-      console.error('Error: Ajax request for ' + moviesURL);
-    }); // end of requestPromise.fails
-
-  }); // end of $('#movies_button').on click handler
-
-}); // end of $(document).ready handler
-
-```
-
-**movies.json**
-
-```json
-"[{\"name\":\"Affliction\",\"rating\":\"R\",\"desc\":\"Little Dark\",\"length\":123},{\"name\":\"Mad Max\",\"rating\":\"R\",\"desc\":\"Fun, action\",\"length\":154},{\"name\":\"Rushmore\",\"rating\":\"PG-13\",\"desc\":\"Quirky humor\",\"length\":105}]"
-```
-
-Next, we'll launch a simple server on our machines using `httpd` on port 5000.
-You may remember this from Week 3 as well.
-
-```bash
-ruby -run -e httpd . -p5000
-```
-
-Now, open up your browser and navigate to `http://localhost:5000`.
-This causes the browser to do the following things:
-
-1.  Send a HTTP Request from the browser to the server we've just created
-(listening on port 5000) to retrieve index.html from the server.
-
-2.  Send another HTTP Request from the browser to the `code.jquery.com` server,
-in order to access the jQuery library.
-
-3.  Send a HTTP Request to our new server asking for the `movies.js` file.
-
-4.  Run the contents of the movies.js file after the DOM is loaded.
-
-5.  When the button is clicked, send out a GET request to our new server,
-asking for the `movies.json` file.
-
-We can actually see all of these requests with the `Network` tool.
-
-What do we see when we click the button?
-All of the data from `movies.json` gets served up to `movies.js`
-as a response to the GET request;
-then, `movies.js` parses the JSON and renders some HTML based on it.
-
-> In this example, HTML is being generated in the browser
-> based on data from a JSON.
-> This is generally referred to as 'client-side templating',
-> and is a common paradigm these days;
-> it's also the one we'll be focusing on most in class.
-> However, before this became the norm,
-> Rails apps would often serve up fully-constructed HTML pages as views;
-> since the work of generating the HTML was being done on the server side,
-> this was called 'server-side templating'.
-> We'll look more deeply at templating later this week.
-
-## Routing and Control :: Existing Movies API
-
-Now let's plug our new front-end into an existing back-end API,
-rather than simply reading from a JSON file.
+Let's start off by hitting an existing Rails API with `curl` requests
+and looking at what we get back.
 
 Go to [this repo](https://github.com/ga-wdi-boston/simple_rails_movies_api)
 and follow the directions given in the README.
 
-> NOTE: **Be sure not to clone the repo into your `movies_frontend` folder.**
-> ALSO NOTE: Don't forget to make sure that Postgres is running
-> before running `rake db:create`.
+> NOTE: Be sure not to clone the `simple_rails_movies_api` repo
+> inside _this repo_.
 
-Once you've cloned the repo, set up the database, and started the server,
-open your browser to `localhost:3000` -
-you should see Rails's "Welcome Aboard" page if your app is working properly.
+Once you've cloned `simple_rails_movies_api`,
+run each of the following commands:
 
-Now that we've got a running back-end,
-let's update our the URL of our AJAX request;
-setting `movies_url` to `localhost:3000/movies`
-should allow our front-end app to find the back-end.
-We also should not need to explicitly parse
-the response that we get from the server,
-so let's update the `.done` handler accordingly.
+*   `bundle install`
+Install all of the Gems for our Rails project.
 
-```javascript
-// ...
+> Ordinarily, we would next run (a) `rake db:create`,
+> which uses Rails's in-built task runner, `rake`, to create a new database.
+> Additionally, we might use other custom `rake` tasks to do things like
+> populate the database with some example data for testing and debugging.
+> However, this particular app is so simple
+> that it doesn't even have a database -
+> all of the data is hard-coded.
+> This is _extremely_ atypical.
 
-var moviesResponseHandler  = function(moviesData){
-    console.log('moviesData is ' + moviesData);
+*   `rails s`
+Launch the Rails server.
 
-    // Server informs the browser that the returned data is
-    // JSON. The HTTP Response header Content-Type is set to
-    // application/json. So JQuery will automatically convert
-    // the data to an Array of Movie objects.
-    var movies = moviesData;
-    console.log('movies are ' + movies);
-}
-// ...
+Finally, open your browser to `localhost:3000` -
+if your app is working properly, you should see Rails's "Welcome Aboard" page.
+
+According to the README inside the `simple_rails_movies_api` repo,
+the API does two things.
+If you make a GET request to `http://localhost:3000/movies`,
+it will return a list of movies, in JSON format.
+If you make a GET request to `http://localhost:3000/movies/<some number>`,
+it will try to return one movie -
+specifically, the movie whose ID matches the number in the URL.
+
+If we hit the API with this GET request:
+
+`curl -w "\n" http://localhost:3000/movies`
+
+we should see the following JSON response
+
+```JSON
+[{"id":3,"name":"Affliction","rating":"R","desc":"Little Dark","length":123},{"id":7,"name":"Mad Max","rating":"R","desc":"Fun, action","length":154},{"id":10,"name":"Rushmore","rating":"PG-13","desc":"Quirky humor","length":105}]
 ```
 
-Does the app work as expected? Fantastic!
+Now let's try requesting a single movie.
+
+`curl -w "\n" http://localhost:3000/movies/7`
+
+should give us the following response:
+
+```JSON
+{"id":7,"name":"Mad Max","rating":"R","desc":"Fun, action","length":154}
+```
+
+In an actual project, we would probably be accessing this JSON using AJAX,
+but CURL provides us a convenient way of testing our API
+without needing to build a front-end.
 
 ## Routing and Control :: Making a New Movies API
 
