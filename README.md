@@ -56,11 +56,9 @@ and follow the directions given in the README.
 Once you've cloned `simple_rails_movies_api`,
 run each of the following commands:
 
-*   `bundle install`
-Install all of the Gems for our Rails project.
+*   `bundle install` : Install all of the Gems for our Rails project.
 
-*   `rails s`
-Launch the Rails server.
+*   `rails s` : Launch the Rails server.
 
 Finally, open your browser to `localhost:3000` -
 if your app is working properly, you should see Rails's "Welcome Aboard" page.
@@ -94,7 +92,7 @@ should give us the following response:
 ```
 
 In an actual project, we would probably be accessing this JSON using AJAX,
-but CURL provides us a convenient way of testing our API
+but `curl` provides us a convenient way of testing our API
 without needing to build a front-end.
 
 ## Creating a New Rails API
