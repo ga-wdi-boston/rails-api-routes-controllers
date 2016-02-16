@@ -388,7 +388,49 @@ if your application involved multiple resources,
 the routes for each of those resources would look just about the same.
 But that would be pretty duplicative, right?
 
-#### Resource Routing
+#### Demo : Resource Routing
+
+Rails has an in-built shortcut for generating routes
+for resources that want to perform all of the standard CRUD actions.
+This shortcut is called _resource routing_, and using it is quite simple.
+
+Writing the code below in `routes.rb` replaces, completely,
+all of the routes we've written by hand so far.
+
+```ruby
+resources :movies
+```
+
+If we had multiple resources that we wanted to give standard routes,
+we could simply add them as additional arguments to `resources`
+
+```ruby
+resources :movies, :players
+```
+
+What if we didn't want to add _all_ of the standard routes?
+`resources` has two helper options, `only` and `except`,
+that allow you to only generate certain specific routes.
+
+For instance,
+if we only wanted our 'Players' resource to have routes for `index` and `show`,
+we could write
+
+```ruby
+resources :movies
+resources :players, only: [:index, :show]
+```
+
+Alternatively, if we wanted 'Players' to have routes for every action
+except for `:update` and `:destroy`, we could write
+
+```ruby
+resources :movies
+resources :players, except: [:update, :destroy]
+```
+
+Since it's usually preferable to hide by default,
+`only` is probably the better choice most of the time.
 
 #### CORS
 
