@@ -224,13 +224,13 @@ Not all controllers handle CRUD,
 but those that do tend to follow the following convention for their routes
 and controller actions:
 
-| Action  | What It Does                             | HTTP Verb | URL          |
-|:-------:|:----------------------------------------:|:---------:|:------------:|
-| index   | Return a list of all resource instances. | GET       | `/things`    |
-| create  | Create a new instance of a resource.     | POST      | `/things`    |
-| show    | Return a single instance of a resource.  | GET       | `/things/:id`|
-| update  | Update a single instance of a resource.  | PATCH     | `/things/:id`|
-| destroy | Destroy a single instance of a resource. | DELETE    | `/things/:id`|
+| Action  | What It Does                             | HTTP Verb | URL           |
+|:-------:|:----------------------------------------:|:---------:|:-------------:|
+| index   | Return a list of all resource instances. | GET       | `/things`     |
+| create  | Create a new instance of a resource.     | POST      | `/things`     |
+| show    | Return a single instance of a resource.  | GET       | `/things/:id` |
+| update  | Update a single instance of a resource.  | PATCH     | `/things/:id` |
+| destroy | Destroy a single instance of a resource. | DELETE    | `/things/:id` |
 
 Let's add an `index` method to `MoviesController`.
 
