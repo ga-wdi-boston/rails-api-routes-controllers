@@ -126,7 +126,7 @@ now that you've seen a few of these, perhaps it seems a little less foreign.
 
 ```bash
 cd movies_app
-subl .
+atom .
 ```
 
 Rails has already downloaded its starting gems,
