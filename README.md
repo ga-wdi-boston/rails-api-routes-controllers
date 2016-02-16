@@ -108,13 +108,13 @@ Navigate to a directory where you keep your projects,
 and create a new Rails app using the following command:
 
 ```bash
-rails new movies_app -T --api --database=postgresql
+rails-api new movies_app -T --database=postgresql
 ```
 
-> The `-T` flag tells Rails to skip setting up a testing framework.
+> `rails-api` tells Rails to use its minimalist configuration, without 
+> a lot of its non-essential features.
 >
-> `--api` tells Rails to use its minimalist configuration -
-> a bare-bones version of Rails called `rails-api`.
+> The `-T` flag tells Rails to skip setting up a testing framework.
 >
 > `--database=postgresql` tells Rails to use Postgres as its database
 > instead of the default Rails database, SQLite.
