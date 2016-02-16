@@ -352,6 +352,50 @@ Define a new route for your 'Players' resource, allowing a `show` action.
 Then, update your `PlayerController` and add a `show` method
 for displaying data on a single 'Player'.
 
+### Code-Along : More Controller Actions
+
+We've currently got two routes and controller actions set up.
+Let's add the other ones that were listed on the table,
+`create`, `update`, and `destroy`.
+
+`create`, according to the table,
+is associated with making a POST request to the `.../resources` URL.
+In our `routes.rb` file, that would look like this.
+
+```ruby
+get '/movies', to: 'movies#index'
+post '/movies', to: 'movies#create'
+get '/movies/:id', to: 'movies#show'
+```
+
+`update` and `destroy` are both associated with
+a URL of the format `.../resources/<some number>`,
+as a PATCH/PUT or DELETE request, respectively.
+Let's add these to the `routes.rb` file as well.
+
+```ruby
+get '/movies', to: 'movies#index'
+post '/movies', to: 'movies#create'
+get '/movies/:id', to: 'movies#show'
+patch '/movies/:id', to: 'movies#update'
+put '/movies/:id', to: 'movies#update'
+delete '/movies/:id', to: 'movies#destroy'
+```
+
+This is the standard way for creating routes for resources
+that your application performs CRUD on;
+if your application involved multiple resources,
+the routes for each of those resources would look just about the same.
+But that would be pretty duplicative, right?
+
+#### Resource Routing
+
+#### CORS
+
+
+### Lab : More Controller Actions, Resource Routes, CORS
+
+
 ### Handle Cross Browser HTTP Requests
 
 However, we soon run into an unexpected problem -
