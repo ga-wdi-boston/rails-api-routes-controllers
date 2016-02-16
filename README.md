@@ -97,20 +97,29 @@ In an actual project, we would probably be accessing this JSON using AJAX,
 but CURL provides us a convenient way of testing our API
 without needing to build a front-end.
 
-## Routing and Control :: Making a New Movies API
+## Creating a New Rails API
 
-Let's go all the way and create a brand new back-end for our front-end to use.
-This new app will work the same way as the old movies API,
-but will have some additional features.
+### Code-Along : Defining a Route and Controller
+
+Now that we've played around with an existing Rails application,
+let's try to create a new app from scratch.
+This new app should work the same way as the old movies API,
+but should have some additional features.
 
 Navigate to a directory where you keep your projects,
 and create a new Rails app using the following command:
 
 ```bash
-rails new movies_app -T --database=postgresql
+rails new movies_app -T --api --database=postgresql
 ```
 
-> The `-T` flag means that we want Rails to skip setting up a testing framework.
+> The `-T` flag tells Rails to skip setting up a testing framework.
+>
+> `--api` tells Rails to use its minimalist configuration -
+> a bare-bones version of Rails called `rails-api`.
+>
+> `--database=postgresql` tells Rails to use Postgres as its database
+> instead of the default Rails database, SQLite.
 
 Go into this new `movies_app` directory and take a look at the file structure;
 now that you've seen a few of these, perhaps it seems a little less foreign.
@@ -120,96 +129,131 @@ cd movies_app
 subl .
 ```
 
-Now start up the Rails server by running `rails server`
-(or just `rails s`, for short).
+Rails has already downloaded its starting gems,
+so there's no need to run `bundle install` at this time.
 
-Let's try to access the default Rails URL.
-In your browser, go to `http://localhost:3000`
+Start up the Rails server by running `rails s`
+(short for `rails server`).
 
-Uh oh! We hit an error.
+Let's try to access this app, this time in the browser.
+In your browser, go to the default Rails URL, `http://localhost:3000`
 
-```rails
+```bash
 >> ActiveRecord::NoDatabaseError
 >> FATAL: database "movies_app_development" does not exist
 ```
 
-Looks like we need to set up a database if we want to move forward.
+Uh oh! We hit an error. Let's kill the server and figure out what to do next.
 
-> Actually, this is a standard requirement -
-> all Rails apps must have a database of some kind in order to function.
+It looks like we need to set up a database if we want to move forward.
+Actually, this is something we'll need to do every time:
+all Rails apps must have a database of some kind in order to run.
 
-We'll be learning more about how databases work soon,
-but for now, let's just run the command to create a new database.
-We'll be using a tool called `rake` for this
-(and many other things, as we go along).
+To create the database,
+we'll be using a tool called `rake` that comes pre-packed with Rails.
 `rake` is a close cousin of `grunt` -
 its job is to allow us to automate tasks related to our project
-and run them on command.
+and run them from the command line.
 
 ```bash
 rake db:create
 ```
 
-Then, let's restart our servers by running `rails s`.
+Eventually, we might run other `rake` tasks at this point -
+for instance, to populate the database with example data.
+
+Let's restart our server by running `rails s`.
 If we open up the browser again and go to `localhost:3000`
 we should see the Welcome Aboard page again - this means that Rails is running!
 
 **OK! We're done, right?**
 
-Well... no. If we try going to `localhost:3000`,
-instead of the JSON we'd expect, we instead get a routing error.
-Why? Because we haven't made any routes yet!
+Well... no. If we try going to `localhost:3000/movies`,
+instead of the JSON we'd expect to see, we instead get a routing error.
+
+```bash
+Routing Error
+No route matches [GET] "/movies"
+```
+
+Whoops! We haven't made any routes yet!
 
 As you learned in the previous lesson,
 a route indicates which controller action will be triggered
 when a particular type of HTTP request arrives at a given URL.
-In this case,
-we want something to happen when we make a GET request at `/movies`.
 
-1.  **Make a route.**
-Open the file config/routes.rb and add the following text:
+In order for our API to respond to GET requests at the `/movies` URL,
+we'll need to create a Route that specifies what to do
+when that type of request comes in.
+
+Add the following code to `config/routes.rb`:
 
 ```ruby
 get '/movies', to: 'movies#index'
 ```
 
-We are creating a Rails route that will say to Rails
+This tells Rails,
 "When you receive a GET request at the URL path '/movies',
-invoke the `index` method on the class MoviesController."
+invoke the `index` method specified in the MoviesController class."
 
-Of course, our route alone is nothing without a controller action behind it;
-if we try to access `localhost:3000/movies`, we'll get another error:
+Of course, we haven't _defined_ a MoviesController class yet,
+so if we try to access `localhost:3000/movies`, we'll get another error:
 
 ```ruby
 >> uninitialized constant MoviesController
 ```
 
-2.  **Make a controller.**
+The purpose of a controller is to handle requests of some particular type.
+In this case, we want to create a new controller called `MoviesController`
+for responding to requests about a resource called 'Movies'.
 
-Go to `/app/controllers/` and create a new file called `movies_controller.rb`.
-Inside it, add the following code:
+Rails has a number of generator tools
+for creating boilerplate files very quickly.
+To spin up a new controller,
+we can just run `rails g controller movies --skip-template-engine`.
+
+This will automatically create a new file in `app/controllers`
+called `movies_controller.rb`, with the following content:
+
+```ruby
+class MoviesController < ApplicationController
+end
+```
+
+Not all controllers handle CRUD,
+but those that do tend to follow the following convention for their routes
+and controller actions:
+
+| Action  | What It Does                             | HTTP Verb | URL          |
+|:-------:|:----------------------------------------:|:---------:|:------------:|
+| index   | Return a list of all resource instances. | GET       | `/things`    |
+| create  | Create a new instance of a resource.     | POST      | `/things`    |
+| show    | Return a single instance of a resource.  | GET       | `/things/:id`|
+| update  | Update a single instance of a resource.  | PATCH     | `/things/:id`|
+| destroy | Destroy a single instance of a resource. | DELETE    | `/things/:id`|
+
+Let's add an `index` method to `MoviesController`.
 
 ```ruby
 class MoviesController < ApplicationController
   def index
-    render :text => "All my movies"
+    # Here's where we define how the application will respond.
   end
 end
 ```
 
-This will create a new controller based on
-the default controller for our application, `ApplicationController`.
-In addition, this new controller now has a method called `index`,
-which should get triggered by the server in response to
-a GET request appearing at `/movies`.
-The only thing missing is the data -
-instead of giving us data on each movie,
-the `index` method (for now) only returns the text "All my movies".
-
-3.  **Access data.**
 In an actual Rails app,
 retrieving and manipulating data would be done through the model.
-However, for today, we'll simplify things by mocking up the model.
+However, for today, we'll simplify things
+by **temporarily** mocking up the model with a private method.
+
+Edit MoviesController to have the following code:
+
+```ruby
+class MoviesController < ApplicationController
+  def index         # GET /movies
+    render :json => movies.to_json
+  end
 
 Edit your MoviesController to have the following code:
 
