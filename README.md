@@ -432,8 +432,112 @@ resources :players, except: [:update, :destroy]
 Since it's usually preferable to hide by default,
 `only` is probably the better choice most of the time.
 
-#### CORS
+#### Code-Along : CORS
 
+Whether we've used manual routes or resource routing,
+our routes need controller actions behind them
+in order to actually do anything.
+
+Let's create methods for `create`, `update`, and `destroy`
+inside 'MoviesController'.
+Since we're not actually manipulating data with our application today,
+let's just have each method return some text.
+
+```ruby
+class MoviesController < ApplicationController
+  def index         # GET /movies
+    render :json => movies.to_json
+  end
+
+  def show          # GET /movies/:id
+    id = params[:id].to_i
+    render :json => movies.find {|movie| movie[:id] == id}
+  end
+
+  def create        # POST /movies
+    render :text => "create a new movie\n"
+  end
+
+  def update        # PUT/PATCH /movies/:id
+    render :text => "update movie with id #{params[:id]}\n"
+  end
+
+  def destroy       # DELETE /movies/:id
+    render :text => "destroy movie with id #{params[:id]}\n"
+  end
+
+  private
+  def movies        # TEMPORARY - FOR TODAY ONLY!!
+    [
+      {id: 3, name: 'Affliction', rating: 'R', desc: 'Little Dark', length: 123},
+      {id: 7, name: 'Mad Max', rating: 'R', desc: 'Fun, action', length: 154},
+      {id: 10, name: 'Rushmore', rating: 'PG-13', desc: 'Quirky humor', length: 105}
+    ]
+  end
+end
+```
+
+Once we spin up the server,
+we can use `curl` to send a POST, PATCH/PUT, or DELETE request to the API.
+
+However, if we were to try to make an AJAX request to the API,
+we would encounter a mysterious error.
+
+```javascript
+XMLHttpRequest cannot load http://localhost:3000
+No 'Access-Control-Allow-Origin' header is present on the requested resource.
+Origin 'null' is therefore not allowed access.
+```
+
+What does it mean? And what's this Access-Control-Allow-Origin stuff anyway?
+
+You may not have realized this, but for security reasons,
+servers are (by default) only permitted to access their own files;
+if you have an app being hosted on a local server,
+it only has the ability to see other files
+being hosted by the same server on the same port.
+So how do we allow a front-end app on one server (say, `localhost:5000`)
+to make AJAX requests to a Rails app on another server (say, `localhost:3000`)?
+
+The answer is CORS (cross-origin resource sharing),
+a system by which _some_ resources can be shared between different domains,
+without automatically sharing everything.
+In order to allow our front-end and back-end apps to work together,
+we need to specify a CORS policy for our back-end app
+that permits a front-end to interact with it.
+
+First, add the following line of code to your Gemfile,
+and run `bundle install` to download the Gem.
+
+```ruby
+gem 'rack-cors', :require => 'rack/cors'
+```
+
+Then, edit a file in the `config` directory, `application.rb`,
+so that it contains the following:
+
+```ruby
+module MoviesApp
+  class Application < Rails::Application
+
+    ...
+
+    config.middleware.use Rack::Cors do
+      allow do
+        origins '*'
+        resource '*', headers: :any, methods: [:get, :post, :patch, :put, :delete, :options]
+        # This is an excessively permissive CORS policy.
+        # In real life, you'll want to limit access much more.
+      end
+    end # end of CORS configuration
+  end
+end
+```
+
+Finally, restart the Rails server by running `rails s`.
+
+Your back-end's CORS policy should now be set up!
+Try making an AJAX request to your Rails API and see what you get back.
 
 ### Lab : More Controller Actions, Resource Routes, CORS
 
