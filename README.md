@@ -7,12 +7,12 @@
 By the end of this lesson, students should be able to:
 
 *   Explain the roles of a router and a controller within a Rails application
-*   Create a table mapping methods and paths to standard CRUD actions
-*   Write basic routes for all standard CRUD actions
+*   Create a table mapping methods and paths to standard CRUD actions.
+*   Define a new controller with methods mapping to standard CRUD actions.
+*   Explain the role of the `params` hash.
+*   Write basic routes for all standard CRUD actions.
 *   Generate standard CRUD routes using "resource routing"
 *   Limit which routes "resource routing" generates, using `only:` and `except:`
-*   Generate a controller to handle some category of requests
-*   Create actions on a controller to handle specific requests
 
 ## Prerequisites
 
