@@ -23,7 +23,7 @@ By the end of this lesson, students should be able to:
 *   jQuery
 *   AJAX
 
-## Rails APIs from the Outside
+## Code-Along : Working with an Existing API
 
 Now that you've mocked up how an MVC app works,
 and explored the file structure of a Rails application,
@@ -44,8 +44,6 @@ usually a browser.
 > [POST](https://github.com/ga-wdi-boston/jquery-ajax-post),
 > and [PATCH](https://github.com/ga-wdi-boston/jquery-ajax-patch).
 
-### Code-Along : Working with an Existing API
-
 Let's start off by hitting an existing Rails API with `curl` requests
 and looking at what we get back.
 
@@ -60,15 +58,6 @@ run each of the following commands:
 
 *   `bundle install`
 Install all of the Gems for our Rails project.
-
-> Ordinarily, we would next run (a) `rake db:create`,
-> which uses Rails's in-built task runner, `rake`, to create a new database.
-> Additionally, we might use other custom `rake` tasks to do things like
-> populate the database with some example data for testing and debugging.
-> However, this particular app is so simple
-> that it doesn't even have a database -
-> all of the data is hard-coded.
-> This is _extremely_ atypical.
 
 *   `rails s`
 Launch the Rails server.
