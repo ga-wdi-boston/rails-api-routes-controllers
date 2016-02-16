@@ -541,6 +541,12 @@ Try making an AJAX request to your Rails API and see what you get back.
 
 ### Lab : More Controller Actions, Resource Routes, CORS
 
+Revisit your 'Players' resource!
+Add routes (either manual or resource routes) to `routes.rb`
+and controller actions to `PlayersController`.
+If you haven't yet, download the `rack-cors` geme and
+create a CORS policy for your app in `application.rb`
+
 ## Additional Resources
 
 *   Part 1 of **[RailsGuides : Rails Routing from the Outside In](http://guides.rubyonrails.org/routing.html)**
