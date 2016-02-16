@@ -255,7 +255,74 @@ class MoviesController < ApplicationController
     render :json => movies.to_json
   end
 
-Edit your MoviesController to have the following code:
+  private
+  def movies        # TEMPORARY - FOR TODAY ONLY!!
+    [
+      {id: 3, name: 'Affliction', rating: 'R', desc: 'Little Dark', length: 123},
+      {id: 7, name: 'Mad Max', rating: 'R', desc: 'Fun, action', length: 154},
+      {id: 10, name: 'Rushmore', rating: 'PG-13', desc: 'Quirky humor', length: 105}
+    ]
+  end
+end
+```
+
+`render :json => some_object` causes the controller to return
+a JSON-ified version of the specified object.
+In this case, MoviesController's `index` method will send back a JSON string
+containing a list of all the movies specifies in `movies`.
+
+Let's pause here so that you have an opportunity to practice this on your own.
+
+### Lab : Defining a Route and Controller
+
+Inside your new `movies_app` application,
+you're going to define a new resource called 'Players'.
+Define a route for this resource that responds to GET `.../players`,
+and corresponds to an `index` controller action.
+Then, create a new controller called `PlayerController`
+to handle CRUD-related requests for 'Players', and give it an `index` method.
+
+Just for this exercise,
+create a private method called `players` to return
+a hard-coded list of player data.
+In a real Rails application,
+you would probably call a method on a `Player` model here
+(perhaps `Player.all`).
+
+### Code-Along: Show, Params Hash
+
+Let's make it so that our app can respond to another type of request.
+Suppose that we want make a GET request at `.../movies/<some number>`
+and get back data about one particular movie.
+Based on the table we looked at earlier,
+this is conventionally handled by a `show` controller action.
+
+Let's first create a new Route in `config/routes.rb`
+
+```ruby
+get '/movies', to: 'movies#index'
+get '/movies/:id', to: 'movies#show'
+```
+
+`:id`, above, is known as a _dynamic segment_ -
+it represents a part of the URL whose value can change.
+
+When a new request comes in,
+Rails stores a lot of meta-data about the request -
+for instance, any query strings added to the URL -
+on a special hash called `params`.
+When we define a dynamic segment in `routes.rb`,
+Rails adds a new key-value paid to the params hash,
+where the key is the name of the dynamic segment
+and the value is whatever is passed in as part of the URL.
+
+`params` is visible to all controllers,
+which means that we can use the data from dynamic segments
+to dictate how the controller behaves.
+
+Below is an example of a controller method, `show`,
+using the `params` hash to identify which resource instance
+the URL is referring to.
 
 ```ruby
 class MoviesController < ApplicationController
@@ -263,19 +330,27 @@ class MoviesController < ApplicationController
     render :json => movies.to_json
   end
 
+  def show          # GET /movies/:id
+    id = params[:id].to_i
+    render :json => movies.find {|movie| movie[:id] == id}
+  end
+
   private
-  def movies        # TEMPORARY ONLY!!
+  def movies        # TEMPORARY - FOR TODAY ONLY!!
     [
-      {name: 'Affliction', rating: 'R', desc: 'Little Dark', length: 123},
-      {name: 'Mad Max', rating: 'R', desc: 'Fun, action', length: 154},
-      {name: 'Rushmore', rating: 'PG-13', desc: 'Quirky humor', length: 105}
+      {id: 3, name: 'Affliction', rating: 'R', desc: 'Little Dark', length: 123},
+      {id: 7, name: 'Mad Max', rating: 'R', desc: 'Fun, action', length: 154},
+      {id: 10, name: 'Rushmore', rating: 'PG-13', desc: 'Quirky humor', length: 105}
     ]
   end
 end
 ```
 
-This will cause MoviesController to return a JSON full of movie data,
-rather than just the text "All my movies".
+### Lab : Params
+
+Define a new route for your 'Players' resource, allowing a `show` action.
+Then, update your `PlayerController` and add a `show` method
+for displaying data on a single 'Player'.
 
 ### Handle Cross Browser HTTP Requests
 
