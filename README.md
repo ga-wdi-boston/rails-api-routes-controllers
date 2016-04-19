@@ -52,21 +52,21 @@ if your app is working properly, you should see Rails's "Welcome Aboard" page.
 
 The API does two things we're going to focus on for now.
 
-If you make a GET request to `http://localhost:3000/books`,
-it will return a list of books, in JSON format.
-If you make a GET request to `http://localhost:3000/books/<some number>`,
+If you make a GET request to `http://localhost:3000/users`,
+it will return a list of users, in JSON format.
+If you make a GET request to `http://localhost:3000/users/<some number>`,
 it will try to return one movie -
 specifically, the movie whose ID matches the number in the URL.
 
 If we hit the API with this GET request:
 
-`curl http://localhost:3000/books`
+`curl http://localhost:3000/users`
 
-we should see a JSON response with all of the books.
+we should see a JSON response with all of the users.
 
 Now let's try requesting a single movie.
 
-`curl http://localhost:3000/books/2`
+`curl http://localhost:3000/users/2`
 
 Should give us a response with one book:
 
