@@ -1,4 +1,4 @@
-![General Assembly Logo](http://i.imgur.com/ke8USTq.png)
+[![General Assembly Logo](https://camo.githubusercontent.com/1a91b05b8f4d44b5bbfb83abac2b0996d8e26c92/687474703a2f2f692e696d6775722e636f6d2f6b6538555354712e706e67)](https://generalassemb.ly/education/web-development-immersive)
 
 # Rails Routing and Control
 
@@ -47,49 +47,32 @@ usually a browser.
 Let's start off by hitting an existing Rails API with `curl` requests
 and looking at what we get back.
 
-Go to [this repo](https://github.com/ga-wdi-boston/simple_rails_movies_api)
-and follow the directions given in the README.
+Use the API you created in [rails-api](https://github.com/ga-wdi-boston/rails-api).
 
-> NOTE: Be sure not to clone the `simple_rails_movies_api` repo
-> inside _this repo_.
-
-Once you've cloned `simple_rails_movies_api`,
-run each of the following commands:
-
-*   `bundle install` : Install all of the Gems for our Rails project.
-
-*   `rails s` : Launch the Rails server.
+Enter `rails server` to start the server
 
 Finally, open your browser to `localhost:3000` -
 if your app is working properly, you should see Rails's "Welcome Aboard" page.
 
-According to the README inside the `simple_rails_movies_api` repo,
-the API does two things.
-If you make a GET request to `http://localhost:3000/movies`,
-it will return a list of movies, in JSON format.
-If you make a GET request to `http://localhost:3000/movies/<some number>`,
+The API does two things we're going to focus on for now.
+
+If you make a GET request to `http://localhost:3000/books`,
+it will return a list of books, in JSON format.
+If you make a GET request to `http://localhost:3000/books/<some number>`,
 it will try to return one movie -
 specifically, the movie whose ID matches the number in the URL.
 
 If we hit the API with this GET request:
 
-`curl -w "\n" http://localhost:3000/movies`
+`curl http://localhost:3000/books`
 
-we should see the following JSON response
-
-```JSON
-[{"id":3,"name":"Affliction","rating":"R","desc":"Little Dark","length":123},{"id":7,"name":"Mad Max","rating":"R","desc":"Fun, action","length":154},{"id":10,"name":"Rushmore","rating":"PG-13","desc":"Quirky humor","length":105}]
-```
+we should see a JSON response with all of the books.
 
 Now let's try requesting a single movie.
 
-`curl -w "\n" http://localhost:3000/movies/7`
+`curl http://localhost:3000/books/2`
 
-should give us the following response:
-
-```JSON
-{"id":7,"name":"Mad Max","rating":"R","desc":"Fun, action","length":154}
-```
+Should give us a response with one book:
 
 In an actual project, we would probably be accessing this JSON using AJAX,
 but `curl` provides us a convenient way of testing our API
@@ -111,7 +94,7 @@ and create a new Rails app using the following command:
 rails-api new movies_app -T --database=postgresql
 ```
 
-> `rails-api` tells Rails to use its minimalist configuration, without 
+> `rails-api` tells Rails to use its minimalist configuration, without
 > a lot of its non-essential features.
 >
 > The `-T` flag tells Rails to skip setting up a testing framework.
@@ -306,17 +289,28 @@ get '/movies/:id', to: 'movies#show'
 it represents a part of the URL whose value can change.
 
 When a new request comes in,
-Rails stores a lot of meta-data about the request -
-for instance, any query strings added to the URL -
-on a special hash called `params`.
+Rails stores a lot of meta-data about the request.
 When we define a dynamic segment in `routes.rb`,
-Rails adds a new key-value paid to the params hash,
+Rails adds a new key-value pair to the params hash,
 where the key is the name of the dynamic segment
 and the value is whatever is passed in as part of the URL.
 
 `params` is visible to all controllers,
 which means that we can use the data from dynamic segments
 to dictate how the controller behaves.
+
+Take the following as an example of the params hash:
+
+```ruby
+get ':controller/:action/:id/with_user/:user_id'
+```
+
+This route would respond to paths such as /photos/show/1/with_user/2.
+In this case, params would be:
+
+```ruby
+ { controller: 'photos', action: 'show', id: '1', user_id: '2' }
+ ```
 
 Below is an example of a controller method, `show`,
 using the `params` hash to identify which resource instance
@@ -430,7 +424,7 @@ resources :players, except: [:update, :destroy]
 Since it's usually preferable to hide by default,
 `only` is probably the better choice most of the time.
 
-#### Code-Along : CORS
+#### Putting it all Together
 
 Whether we've used manual routes or resource routing,
 our routes need controller actions behind them
@@ -475,17 +469,14 @@ class MoviesController < ApplicationController
 end
 ```
 
-Once we spin up the server,
-we can use `curl` to send a POST, PATCH/PUT, or DELETE request to the API.
+### Lab : More Controller Actions, Resource Routes, CORS
 
-However, if we were to try to make an AJAX request to the API,
-we would encounter a mysterious error.
+Revisit your 'Players' resource!
+Add routes (either manual or resource routes) to `routes.rb`
+and controller actions to `PlayersController`.
 
-```javascript
-XMLHttpRequest cannot load http://localhost:3000
-No 'Access-Control-Allow-Origin' header is present on the requested resource.
-Origin 'null' is therefore not allowed access.
-```
+
+### Note: Where are my Errors coming from?
 
 What does it mean? And what's this Access-Control-Allow-Origin stuff anyway?
 
@@ -504,46 +495,7 @@ In order to allow our front-end and back-end apps to work together,
 we need to specify a CORS policy for our back-end app
 that permits a front-end to interact with it.
 
-First, add the following line of code to your Gemfile,
-and run `bundle install` to download the Gem.
 
-```ruby
-gem 'rack-cors', :require => 'rack/cors'
-```
-
-Then, edit a file in the `config` directory, `application.rb`,
-so that it contains the following:
-
-```ruby
-module MoviesApp
-  class Application < Rails::Application
-
-    ...
-
-    config.middleware.use Rack::Cors do
-      allow do
-        origins '*'
-        resource '*', headers: :any, methods: [:get, :post, :patch, :put, :delete, :options]
-        # This is an excessively permissive CORS policy.
-        # In real life, you'll want to limit access much more.
-      end
-    end # end of CORS configuration
-  end
-end
-```
-
-Finally, restart the Rails server by running `rails s`.
-
-Your back-end's CORS policy should now be set up!
-Try making an AJAX request to your Rails API and see what you get back.
-
-### Lab : More Controller Actions, Resource Routes, CORS
-
-Revisit your 'Players' resource!
-Add routes (either manual or resource routes) to `routes.rb`
-and controller actions to `PlayersController`.
-If you haven't yet, download the `rack-cors` geme and
-create a CORS policy for your app in `application.rb`
 
 ## Additional Resources
 
