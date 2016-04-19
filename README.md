@@ -6,22 +6,18 @@
 
 By the end of this lesson, students should be able to:
 
-*   Explain the roles of a router and a controller within a Rails application
-*   Create a table mapping methods and paths to standard CRUD actions.
-*   Define a new controller with methods mapping to standard CRUD actions.
-*   Explain the role of the `params` hash.
-*   Write basic routes for all standard CRUD actions.
-*   Generate standard CRUD routes using "resource routing"
-*   Limit which routes "resource routing" generates, using `only:` and `except:`
+-   Explain the roles of a router and a controller within a Rails application
+-   Define a new controller with methods mapping to standard CRUD actions.
+-   Explain the role of the `params` hash.
+-   Write basic routes for all standard CRUD actions.
+-   Generate standard CRUD routes using "resource routing"
+-   Limit which routes "resource routing" generates, using `only:` and `except:`
 
 ## Prerequisites
 
-*   Ruby
-*   MVC
-*   HTTP
-*   JavaScript
-*   jQuery
-*   AJAX
+-   Ruby
+-   MVC
+-   HTTP
 
 ## Code-Along : Working with an Existing API
 
@@ -338,7 +334,7 @@ class MoviesController < ApplicationController
 end
 ```
 
-### Lab : Params
+### Lab : Show, Params Hash
 
 Define a new route for your 'Players' resource, allowing a `show` action.
 Then, update your `PlayerController` and add a `show` method
@@ -499,4 +495,9 @@ that permits a front-end to interact with it.
 
 ## Additional Resources
 
-*   Part 1 of **[RailsGuides : Rails Routing from the Outside In](http://guides.rubyonrails.org/routing.html)**
+-   Part 1 of **[RailsGuides : Rails Routing from the Outside In](http://guides.rubyonrails.org/routing.html)**
+
+## [License](LICENSE)
+
+Source code distributed under the MIT license. Text and other assets copyright
+General Assembly, Inc., all rights reserved.
